@@ -8,7 +8,7 @@ class HomeRouters {
   static final routers = <GetPage>[
     GetPage(
       name: '/home',
-      page: () => const HomePage(),
+      page: () => HomePage(),
       binding: HomeBindings(),
     ),
   ];

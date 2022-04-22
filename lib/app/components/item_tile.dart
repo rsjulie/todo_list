@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ItemTile extends StatefulWidget {
-  const ItemTile({Key? key}) : super(key: key);
+  String name;
+  ItemTile({Key? key, required this.name}) : super(key: key);
 
   @override
   State<ItemTile> createState() => _ItemTileState();
@@ -13,6 +14,7 @@ class _ItemTileState extends State<ItemTile> {
   @override
   initState() {
     strikedText = true;
+    super.initState();
   }
 
   @override
@@ -24,23 +26,35 @@ class _ItemTileState extends State<ItemTile> {
         });
       },
       child: Container(
-        margin: const EdgeInsets.all(10),
-        height: 50,
-        child: Row(children: [
-          Expanded(
-              child: Container(
-            padding: const EdgeInsets.all(10),
-            child: Row(children: [
-              Text(
-                'Name',
-                style: TextStyle(
-                    decoration: strikedText
-                        ? TextDecoration.lineThrough
-                        : TextDecoration.none),
-              ),
-            ]),
-          ))
-        ]),
+        padding: const EdgeInsets.only(left: 10),
+        height: 62,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            widget.name,
+                            style: TextStyle(
+                                fontSize: 22,
+                                decoration: strikedText
+                                    ? TextDecoration.lineThrough
+                                    : TextDecoration.none),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
