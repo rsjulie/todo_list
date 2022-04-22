@@ -103,7 +103,6 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                       padding: const EdgeInsets.only(right: 10),
                       child: TextButton(
                           onPressed: () {
-                            print('asdasdasdasd');
                             Get.toNamed('/home');
                           },
                           child: Row(
