@@ -1,23 +1,79 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:todo_list/app/components/edit_dialog.dart';
 import 'package:todo_list/app/components/item_tile.dart';
 import './home_controller.dart';
 
 class HomePage extends GetView<HomeController> {
-  List<String> list = [
-    'Julie',
-    'Karen',
-    'Ygor',
-    'Ana Clara',
-    'Ailton Ferreira da Silva'
-  ];
+  @override
+  final HomeController controller =
+      Get.put(HomeController(listRepository: Get.find()));
+  final formKey = GlobalKey<FormState>();
+
+  editDialog(item) async {
+    await Get.defaultDialog(
+      radius: 8,
+      content: AddEditDialog(
+        item: item,
+        repository: Get.find(),
+      ),
+      title: '',
+      backgroundColor: Colors.white,
+      titleStyle: const TextStyle(fontSize: 1),
+    );
+    print(controller.home);
+    controller.update();
+    return 'Abc';
+  }
+
+  addDialog() {
+    Get.defaultDialog(
+      radius: 8,
+      content: AddEditDialog(repository: Get.find()),
+      title: '',
+      backgroundColor: const Color.fromARGB(106, 255, 255, 255),
+      titleStyle: const TextStyle(fontSize: 1),
+    );
+  }
 
   HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          addDialog();
+        },
+        backgroundColor: const Color.fromARGB(255, 81, 0, 255),
+        child: const Icon(Icons.add),
+      ),
+      bottomNavigationBar: BottomAppBar(
+          color: const Color.fromARGB(255, 81, 0, 157),
+          shape: const CircularNotchedRectangle(),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              TextButton(
+                onPressed: () {},
+                child: Row(
+                  children: const [
+                    Text(
+                      'Sair',
+                      style:
+                          TextStyle(color: Color.fromARGB(255, 174, 102, 255)),
+                    ),
+                    Icon(
+                      Icons.exit_to_app,
+                      color: Color.fromARGB(255, 174, 102, 255),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          )),
       body: Container(
         // color: const Color.fromARGB(255, 242, 242, 242),
         color: Colors.white,
@@ -34,45 +90,45 @@ class HomePage extends GetView<HomeController> {
                       Color.fromARGB(255, 134, 0, 175)
                     ]))),
             SafeArea(
-              child: Column(
-                children: [
-                  Stack(
-                    children: [
-                      SizedBox(
-                        height: context.heightTransformer(reducedBy: 10),
-                        child: Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    bottom: 20, left: 15, right: 30),
-                                child: Text('MY -- LIST -',
-                                    style: GoogleFonts.raleway(
-                                        textStyle: const TextStyle(
-                                            color: Colors.white,
-                                            letterSpacing: 5,
-                                            fontSize: 68,
-                                            fontWeight: FontWeight.w500))),
-                              ),
-                              Expanded(
-                                child: Material(
-                                  borderRadius: BorderRadius.circular(8),
-                                  elevation: 15,
-                                  shadowColor: Colors.black,
-                                  child: Stack(
-                                    children: [
-                                      Container(
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            border: Border.all(
-                                                color: const Color.fromARGB(
-                                                    39, 90, 0, 187),
-                                                width: 2)),
-                                        padding: const EdgeInsets.all(20),
-                                        child: ListView.builder(
-                                          itemCount: list.length,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: context.heightTransformer(reducedBy: 10),
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  bottom: 20, left: 15, right: 30),
+                              child: Text('MY ●● LIST ●',
+                                  style: GoogleFonts.raleway(
+                                      textStyle: const TextStyle(
+                                          color: Colors.white,
+                                          letterSpacing: 5,
+                                          fontSize: 60,
+                                          fontWeight: FontWeight.w500))),
+                            ),
+                            Expanded(
+                              child: Material(
+                                borderRadius: BorderRadius.circular(8),
+                                elevation: 15,
+                                shadowColor: Colors.black,
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          border: Border.all(
+                                              color: const Color.fromARGB(
+                                                  39, 90, 0, 187),
+                                              width: 2)),
+                                      padding: const EdgeInsets.all(20),
+                                      child: Obx(
+                                        () => ListView.builder(
+                                          itemCount: controller.home.length,
                                           itemBuilder: (context, index) =>
                                               Column(
                                             children: [
@@ -80,37 +136,16 @@ class HomePage extends GetView<HomeController> {
                                                 children: [
                                                   Expanded(
                                                     child: ItemTile(
-                                                        name: list[index]),
+                                                        name: controller
+                                                            .home[index].item),
                                                   ),
                                                   IconButton(
-                                                    onPressed: () {
-                                                      Get.defaultDialog(
-                                                        radius: 8,
-                                                        content: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .symmetric(
-                                                                  horizontal:
-                                                                      15),
-                                                          child: TextFormField(
-                                                            decoration:
-                                                                InputDecoration(
-                                                                    filled:
-                                                                        true,
-                                                                    fillColor:
-                                                                        Colors.grey[
-                                                                            100]),
-                                                          ),
-                                                        ),
-                                                        title: '',
-                                                        middleText:
-                                                            "Hello world!",
-                                                        backgroundColor:
-                                                            Colors.white,
-                                                        titleStyle:
-                                                            const TextStyle(
-                                                                fontSize: 1),
-                                                      );
+                                                    onPressed: () async {
+                                                      controller.home[index]
+                                                              .item =
+                                                          editDialog(controller
+                                                              .home[index]
+                                                              .item);
                                                     },
                                                     constraints:
                                                         const BoxConstraints(
@@ -127,7 +162,8 @@ class HomePage extends GetView<HomeController> {
                                                   const SizedBox(width: 5),
                                                   IconButton(
                                                     onPressed: () {
-                                                      list.removeAt(index);
+                                                      controller.home
+                                                          .removeAt(index);
                                                     },
                                                     constraints:
                                                         const BoxConstraints(
@@ -150,32 +186,17 @@ class HomePage extends GetView<HomeController> {
                                           ),
                                         ),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
-                      Positioned(
-                        left: (context.widthTransformer(reducedBy: 50) - 30),
-                        bottom: 0,
-                        child: CircleAvatar(
-                            radius: 30,
-                            backgroundColor:
-                                const Color.fromARGB(255, 96, 0, 231),
-                            child: IconButton(
-                                splashColor: Colors.amber,
-                                onPressed: () {},
-                                icon: const Icon(
-                                  Icons.add,
-                                  color: Colors.white,
-                                ))),
-                      )
-                    ],
-                  ),
-                ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

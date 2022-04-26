@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ItemTile extends StatefulWidget {
   String name;
@@ -9,11 +10,11 @@ class ItemTile extends StatefulWidget {
 }
 
 class _ItemTileState extends State<ItemTile> {
-  bool strikedText = true;
+  bool strikedText = false;
 
   @override
   initState() {
-    strikedText = true;
+    strikedText = false;
     super.initState();
   }
 
@@ -27,7 +28,7 @@ class _ItemTileState extends State<ItemTile> {
       },
       child: Container(
         padding: const EdgeInsets.only(left: 10),
-        height: 62,
+        height: 60,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -40,8 +41,8 @@ class _ItemTileState extends State<ItemTile> {
                         Expanded(
                           child: Text(
                             widget.name,
-                            style: TextStyle(
-                                fontSize: 22,
+                            style: GoogleFonts.raleway(
+                                fontSize: 18,
                                 decoration: strikedText
                                     ? TextDecoration.lineThrough
                                     : TextDecoration.none),
