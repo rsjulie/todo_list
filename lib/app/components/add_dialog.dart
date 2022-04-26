@@ -6,10 +6,12 @@ import 'package:todo_list/app/models/item.dart';
 import 'package:todo_list/app/modules/home/home_controller.dart';
 import 'package:todo_list/app/repositories/listitems_repository.dart';
 
-class EditDialog extends GetView<HomeController> {
+class AddDialog extends GetView<HomeController> {
   String? item;
   final formKey = GlobalKey<FormState>();
   ListItemsRepository repository = ListItemsRepository();
+
+  AddDialog({Key? key, this.item}) : super(key: key);
 
   _submit() {
     formKey.currentState?.save();
@@ -23,8 +25,6 @@ class EditDialog extends GetView<HomeController> {
     print(list);
     // Get.back();
   }
-
-  EditDialog({Key? key, this.item, required this.repository}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:todo_list/app/components/add_dialog.dart';
 import 'package:todo_list/app/components/edit_dialog.dart';
 import 'package:todo_list/app/components/item_tile.dart';
 import './home_controller.dart';
@@ -14,7 +15,7 @@ class HomePage extends GetView<HomeController> {
   editDialog(item) async {
     await Get.defaultDialog(
       radius: 8,
-      content: AddEditDialog(
+      content: EditDialog(
         item: item,
         repository: Get.find(),
       ),
@@ -22,7 +23,6 @@ class HomePage extends GetView<HomeController> {
       backgroundColor: Colors.white,
       titleStyle: const TextStyle(fontSize: 1),
     );
-    print(controller.home);
     controller.update();
     return 'Abc';
   }
@@ -30,7 +30,7 @@ class HomePage extends GetView<HomeController> {
   addDialog() {
     Get.defaultDialog(
       radius: 8,
-      content: AddEditDialog(repository: Get.find()),
+      content: AddDialog(),
       title: '',
       backgroundColor: const Color.fromARGB(106, 255, 255, 255),
       titleStyle: const TextStyle(fontSize: 1),
