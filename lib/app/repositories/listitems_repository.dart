@@ -5,8 +5,4 @@ class ListItemsRepository {
   List<ItemModel> findAll() {
     return dummy_items;
   }
-
-  add(item) {
-    dummy_items.add(item);
-  }
 }

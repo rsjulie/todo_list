@@ -35,21 +35,23 @@ class _ItemTileState extends State<ItemTile> {
             Row(
               children: [
                 Expanded(
-                  child: Container(
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            widget.name,
-                            style: GoogleFonts.raleway(
-                                fontSize: 18,
-                                decoration: strikedText
-                                    ? TextDecoration.lineThrough
-                                    : TextDecoration.none),
-                          ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          widget.name,
+                          style: GoogleFonts.raleway(
+                              fontSize: 18,
+                              textStyle: strikedText
+                                  ? const TextStyle(
+                                      color: Color.fromARGB(255, 195, 195, 195))
+                                  : const TextStyle(),
+                              decoration: strikedText
+                                  ? TextDecoration.lineThrough
+                                  : TextDecoration.none),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 )
               ],

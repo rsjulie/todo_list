@@ -1,29 +1,25 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:todo_list/app/models/item.dart';
 import 'package:todo_list/app/modules/home/home_controller.dart';
-import 'package:todo_list/app/repositories/listitems_repository.dart';
 
 class AddDialog extends GetView<HomeController> {
-  String? item;
+  final String? item;
   final formKey = GlobalKey<FormState>();
-  ListItemsRepository repository = ListItemsRepository();
-
-  AddDialog({Key? key, this.item}) : super(key: key);
+  final void Function(ItemModel) add;
+  TextEditingController addController = TextEditingController();
+  AddDialog({Key? key, this.item, required this.add}) : super(key: key);
 
   _submit() {
     formKey.currentState?.save();
-    var list = repository.findAll();
-    list.add(
+    add(
       ItemModel(
-          id: Random().nextInt(100).toString(),
-          item: controller.editTaskEC.text),
+          id: '4',
+          item: addController.text,
+          /******* TODO: IMPLEMENT */
+          isDone: false),
     );
-    print(list[8].item);
-    print(list);
-    // Get.back();
+    Get.back();
   }
 
   @override
@@ -36,7 +32,7 @@ class AddDialog extends GetView<HomeController> {
           children: [
             Expanded(
               child: TextFormField(
-                controller: controller.editTaskEC,
+                controller: addController,
                 autofocus: true,
                 decoration: const InputDecoration(
                     filled: true,

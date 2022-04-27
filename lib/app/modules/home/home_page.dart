@@ -1,9 +1,11 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:todo_list/app/components/add_dialog.dart';
 import 'package:todo_list/app/components/edit_dialog.dart';
 import 'package:todo_list/app/components/item_tile.dart';
+import 'package:todo_list/app/models/item_list.dart';
 import './home_controller.dart';
 
 class HomePage extends GetView<HomeController> {
@@ -12,25 +14,28 @@ class HomePage extends GetView<HomeController> {
       Get.put(HomeController(listRepository: Get.find()));
   final formKey = GlobalKey<FormState>();
 
-  editDialog(item) async {
+  addDialog(ItemList loadedItems) {
+    Get.defaultDialog(
+      radius: 8,
+      content: AddDialog(
+        add: loadedItems.addItem,
+      ),
+      title: '',
+      backgroundColor: const Color.fromARGB(106, 255, 255, 255),
+      titleStyle: const TextStyle(fontSize: 1),
+    );
+  }
+
+  editDialog(index, item) async {
     await Get.defaultDialog(
       radius: 8,
       content: EditDialog(
+        index: index,
         item: item,
-        repository: Get.find(),
+        edit: (_, __) {
+          print('object');
+        },
       ),
-      title: '',
-      backgroundColor: Colors.white,
-      titleStyle: const TextStyle(fontSize: 1),
-    );
-    controller.update();
-    return 'Abc';
-  }
-
-  addDialog() {
-    Get.defaultDialog(
-      radius: 8,
-      content: AddDialog(),
       title: '',
       backgroundColor: const Color.fromARGB(106, 255, 255, 255),
       titleStyle: const TextStyle(fontSize: 1),
@@ -41,11 +46,13 @@ class HomePage extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<ItemList>(context);
+    final loadedItems = provider;
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          addDialog();
+          addDialog(loadedItems);
         },
         backgroundColor: const Color.fromARGB(255, 81, 0, 255),
         child: const Icon(Icons.add),
@@ -126,64 +133,60 @@ class HomePage extends GetView<HomeController> {
                                                   39, 90, 0, 187),
                                               width: 2)),
                                       padding: const EdgeInsets.all(20),
-                                      child: Obx(
-                                        () => ListView.builder(
-                                          itemCount: controller.home.length,
-                                          itemBuilder: (context, index) =>
-                                              Column(
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Expanded(
-                                                    child: ItemTile(
-                                                        name: controller
-                                                            .home[index].item),
+                                      child: ListView.builder(
+                                        itemCount: loadedItems.items.length,
+                                        itemBuilder: (context, index) => Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Expanded(
+                                                  child: ItemTile(
+                                                      name: loadedItems
+                                                          .items[index].item),
+                                                ),
+                                                IconButton(
+                                                  onPressed: () async {
+                                                    editDialog(
+                                                        index,
+                                                        controller
+                                                            .home[index].item);
+                                                  },
+                                                  constraints:
+                                                      const BoxConstraints(
+                                                          maxHeight: 30,
+                                                          maxWidth: 30),
+                                                  padding:
+                                                      const EdgeInsets.all(0),
+                                                  icon: const Icon(
+                                                    Icons.edit,
+                                                    color: Colors.black54,
+                                                    size: 22,
                                                   ),
-                                                  IconButton(
-                                                    onPressed: () async {
-                                                      controller.home[index]
-                                                              .item =
-                                                          editDialog(controller
-                                                              .home[index]
-                                                              .item);
-                                                    },
-                                                    constraints:
-                                                        const BoxConstraints(
-                                                            maxHeight: 30,
-                                                            maxWidth: 30),
-                                                    padding:
-                                                        const EdgeInsets.all(0),
-                                                    icon: const Icon(
-                                                      Icons.edit,
-                                                      color: Colors.black54,
-                                                      size: 22,
-                                                    ),
+                                                ),
+                                                const SizedBox(width: 5),
+                                                IconButton(
+                                                  onPressed: () {
+                                                    loadedItems.items
+                                                        .removeAt(index);
+                                                  },
+                                                  constraints:
+                                                      const BoxConstraints(
+                                                          maxHeight: 30,
+                                                          maxWidth: 30),
+                                                  padding:
+                                                      const EdgeInsets.all(0),
+                                                  iconSize: 22,
+                                                  icon: Icon(
+                                                    Icons.delete,
+                                                    color: Colors.red[300],
                                                   ),
-                                                  const SizedBox(width: 5),
-                                                  IconButton(
-                                                    onPressed: () {
-                                                      controller.home
-                                                          .removeAt(index);
-                                                    },
-                                                    constraints:
-                                                        const BoxConstraints(
-                                                            maxHeight: 30,
-                                                            maxWidth: 30),
-                                                    padding:
-                                                        const EdgeInsets.all(0),
-                                                    iconSize: 22,
-                                                    icon: Icon(
-                                                      Icons.delete,
-                                                      color: Colors.red[300],
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              const Divider(
-                                                thickness: 1,
-                                              ),
-                                            ],
-                                          ),
+                                                ),
+                                              ],
+                                            ),
+                                            const Divider(
+                                              thickness: 1,
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ),
