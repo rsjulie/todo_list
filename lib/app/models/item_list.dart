@@ -5,38 +5,33 @@ import 'package:todo_list/app/data/dummy_data.dart';
 import 'package:todo_list/app/models/item.dart';
 
 class ItemList with ChangeNotifier {
-  final List<ItemModel> _items = dummy_items;
+  List<ItemModel> _items = dummy_items;
   List<ItemModel> get items => [..._items];
 
-  Future<void> saveItem(Map<String, Object> data) {
-    bool hasId = data['id'] != null;
-    final product = ItemModel(id: '2', item: 'aaaaaaaaaaaaaa', isDone: true);
-    if (hasId) {
-      return updateItem(product);
-    } else {
-      return addItem(product);
-    }
-  }
-
-  Future<void> addItem(ItemModel list) async {
-    var id = Random().nextInt(1000).toString();
-    items.add(ItemModel(id: id, item: list.item, isDone: true));
+  void addItem(ItemModel item) {
+    var id = Random().nextDouble().toString();
+    _items.add(ItemModel(id: id, item: item.item, isDone: false));
     notifyListeners();
   }
 
-  Future<void> updateItem(ItemModel product) async {
-    int index = items.indexWhere((p) => p.id == product.id);
+  void updateItem(ItemModel item) {
+    int index = items.indexWhere((p) => p.id == item.id);
     if (index >= 0) {
-      items[index] = product;
+      _items[index] = item;
     }
-    return Future.value();
+    notifyListeners();
   }
 
-  Future<void> removeItem(ItemModel product) async {
-    int index = items.indexWhere((p) => p.id == product.id);
+  void removeItem(index, ItemModel item) {
     if (index >= 0) {
-      final product = items[index];
-      items.remove(product);
+      _items.removeAt(index);
     }
+    notifyListeners();
+  }
+
+  void loadIems() {
+    var itemsBuffer = _items;
+    _items.clear();
+    _items = itemsBuffer;
   }
 }

@@ -4,21 +4,14 @@ import 'package:todo_list/app/models/item.dart';
 import 'package:todo_list/app/modules/home/home_controller.dart';
 
 class AddDialog extends GetView<HomeController> {
-  final String? item;
   final formKey = GlobalKey<FormState>();
   final void Function(ItemModel) add;
   TextEditingController addController = TextEditingController();
-  AddDialog({Key? key, this.item, required this.add}) : super(key: key);
+  AddDialog({Key? key, required this.add}) : super(key: key);
 
   _submit() {
     formKey.currentState?.save();
-    add(
-      ItemModel(
-          id: '4',
-          item: addController.text,
-          /******* TODO: IMPLEMENT */
-          isDone: false),
-    );
+    add(ItemModel(item: addController.text));
     Get.back();
   }
 

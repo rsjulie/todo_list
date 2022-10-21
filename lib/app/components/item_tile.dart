@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_list/app/models/item.dart';
 
 class ItemTile extends StatefulWidget {
-  String name;
-  ItemTile({Key? key, required this.name}) : super(key: key);
+  const ItemTile({Key? key}) : super(key: key);
 
   @override
   State<ItemTile> createState() => _ItemTileState();
@@ -20,10 +21,12 @@ class _ItemTileState extends State<ItemTile> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<ItemModel>(context);
+    final loadedItem = provider;
     return InkWell(
       onTap: () {
         setState(() {
-          strikedText = !strikedText;
+          loadedItem.toggleDone();
         });
       },
       child: Container(
@@ -39,14 +42,14 @@ class _ItemTileState extends State<ItemTile> {
                     children: [
                       Expanded(
                         child: Text(
-                          widget.name,
+                          loadedItem.item,
                           style: GoogleFonts.raleway(
                               fontSize: 18,
-                              textStyle: strikedText
+                              textStyle: loadedItem.isDone
                                   ? const TextStyle(
                                       color: Color.fromARGB(255, 195, 195, 195))
                                   : const TextStyle(),
-                              decoration: strikedText
+                              decoration: loadedItem.isDone
                                   ? TextDecoration.lineThrough
                                   : TextDecoration.none),
                         ),

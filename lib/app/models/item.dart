@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class ItemModel with ChangeNotifier {
-  final String id;
+  final String? id;
   late String item;
   late bool isDone;
 
-  ItemModel({required this.id, required this.item, required this.isDone});
+  ItemModel({this.id, required this.item, this.isDone = false});
 
   toggleDone() {
     isDone = !isDone;

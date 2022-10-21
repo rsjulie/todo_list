@@ -1,42 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_list/app/models/item.dart';
+import 'package:todo_list/app/models/item_list.dart';
 import 'package:todo_list/app/repositories/listitems_repository.dart';
 
-class EditDialog extends StatefulWidget {
-  String? item;
-  final int index;
-  final void Function(int, int) edit;
+class UpdateDialog extends StatefulWidget {
+  ItemModel item;
+  final void Function(ItemModel) update;
 
-  EditDialog({Key? key, this.index = 0, this.item, required this.edit})
-      : super(key: key);
+  UpdateDialog({
+    Key? key,
+    required this.item,
+    required this.update,
+  }) : super(key: key);
 
   @override
-  State<EditDialog> createState() => _EditDialogState();
+  State<UpdateDialog> createState() => _UpdateDialogState();
 }
 
-class _EditDialogState extends State<EditDialog> {
+class _UpdateDialogState extends State<UpdateDialog> {
   final formKey = GlobalKey<FormState>();
 
-  TextEditingController editcontroller = TextEditingController();
+  TextEditingController updatecontroller = TextEditingController();
 
   ListItemsRepository repository = ListItemsRepository();
 
   @override
   void initState() {
     super.initState();
-    editcontroller = TextEditingController(text: widget.item);
+    updatecontroller = TextEditingController(text: widget.item.item);
   }
 
   _submit() {
     formKey.currentState?.save();
-    widget.edit(widget.index, widget.index);
-    // widget.edit(
-    //   ItemModel(
-    //     id: Random().nextInt(100).toString(),
-    //     item: editcontroller.text,
-    //   ),
-    // );
+    widget.item.item = updatecontroller.text;
+    widget.update(widget.item);
     Get.back();
+    Provider.of<ItemList>(context, listen: false).loadIems();
   }
 
   @override
@@ -49,7 +50,7 @@ class _EditDialogState extends State<EditDialog> {
           children: [
             Expanded(
               child: TextFormField(
-                controller: editcontroller..text,
+                controller: updatecontroller..text,
                 autofocus: true,
                 decoration: const InputDecoration(
                     filled: true,

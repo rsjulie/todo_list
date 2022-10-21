@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_list/app/components/add_dialog.dart';
-import 'package:todo_list/app/components/edit_dialog.dart';
+import 'package:todo_list/app/components/update_dialog.dart';
 import 'package:todo_list/app/components/item_tile.dart';
+import 'package:todo_list/app/models/item.dart';
 import 'package:todo_list/app/models/item_list.dart';
 import './home_controller.dart';
 
@@ -26,15 +27,12 @@ class HomePage extends GetView<HomeController> {
     );
   }
 
-  editDialog(index, item) async {
+  updateDialog(ItemList loadedItems, ItemModel item) async {
     await Get.defaultDialog(
       radius: 8,
-      content: EditDialog(
-        index: index,
+      content: UpdateDialog(
         item: item,
-        edit: (_, __) {
-          print('object');
-        },
+        update: loadedItems.updateItem,
       ),
       title: '',
       backgroundColor: const Color.fromARGB(106, 255, 255, 255),
@@ -64,7 +62,9 @@ class HomePage extends GetView<HomeController> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Get.back();
+                },
                 child: Row(
                   children: const [
                     Text(
@@ -109,13 +109,31 @@ class HomePage extends GetView<HomeController> {
                             Padding(
                               padding: const EdgeInsets.only(
                                   bottom: 20, left: 15, right: 30),
-                              child: Text('MY ●● LIST ●',
-                                  style: GoogleFonts.raleway(
+                              child: Column(
+                                children: [
+                                  Text(
+                                    'MY ∞ LIST',
+                                    style: GoogleFonts.raleway(
                                       textStyle: const TextStyle(
                                           color: Colors.white,
                                           letterSpacing: 5,
-                                          fontSize: 60,
-                                          fontWeight: FontWeight.w500))),
+                                          fontSize: 28,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 15),
+                                  Text(
+                                    'Tarefas hoje',
+                                    style: GoogleFonts.raleway(
+                                      textStyle: const TextStyle(
+                                          color: Colors.white,
+                                          letterSpacing: 2,
+                                          fontSize: 40,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                             Expanded(
                               child: Material(
@@ -140,16 +158,18 @@ class HomePage extends GetView<HomeController> {
                                             Row(
                                               children: [
                                                 Expanded(
-                                                  child: ItemTile(
-                                                      name: loadedItems
-                                                          .items[index].item),
+                                                  child: ChangeNotifierProvider(
+                                                    create: (_) => loadedItems
+                                                        .items[index],
+                                                    child: const ItemTile(),
+                                                  ),
                                                 ),
                                                 IconButton(
-                                                  onPressed: () async {
-                                                    editDialog(
-                                                        index,
-                                                        controller
-                                                            .home[index].item);
+                                                  onPressed: () {
+                                                    updateDialog(
+                                                        loadedItems,
+                                                        loadedItems
+                                                            .items[index]);
                                                   },
                                                   constraints:
                                                       const BoxConstraints(
@@ -166,8 +186,10 @@ class HomePage extends GetView<HomeController> {
                                                 const SizedBox(width: 5),
                                                 IconButton(
                                                   onPressed: () {
-                                                    loadedItems.items
-                                                        .removeAt(index);
+                                                    loadedItems.removeItem(
+                                                        index,
+                                                        loadedItems
+                                                            .items[index]);
                                                   },
                                                   constraints:
                                                       const BoxConstraints(
